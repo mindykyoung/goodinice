@@ -14,19 +14,47 @@
 <script>
 $(document).ready(function(){
   let DEBUG = 1; //let=var 변수선언..메세지 찍을때 값1로 해놓고 나중에 0으로 바꾸면 메세지 출력안됨
+  let privateKey = "KzuchqBZ284uZw4Ceufy6jhAxJgZMZ1WaQZ4RUkEct7ry79oUFoU"
   let client = new CoinStack('c7dbfacbdf1510889b38c01b8440b1', '10e88e9904f29c98356fd2d12b26de', 'c3sp2.blocko.io', 'https');
 
   if (DEBUG) {
 	console.log("client: ", client);
     console.log('starting...');
   }
-
+  $('#newSend').on('click', function(){ //전송
+	let toaddressress = $('#to_address').val()
+	let fromaddress = $('#i_address').val()
+	let coin = $('#coin').val()
+	
+	let txBuilder = client.createTransactionBuilder();
+	
+     txBuilder.addOutput(toaccount, CoinStack.Math.toSatoshi(coin));
+     txBuilder.setInput(fromaccount);
+     txBuilder.buildTransaction(function (err, tx) {
+     try {
+       
+      tx.sign(privateKey);
+       
+       let rawTx = tx.serialize();
+       client.sendTransaction(rawTx, function (err) {
+	 if (!err) {
+	     console.log("definition: ", tx.getHash());
+	     alert("거래가 완료 되었습니다..!!!");
+	 }
+       });
+    } catch (e) {
+       console.log(e)
+     
+      } //end of try
+  
+    }) // end of txbuilder
+  })
   $('#newBlance').on('click', function(){	
 	let addr = $('#i_address').val()
 	client.getBalance(addr, function (err, balance) {
 	    if (!err) {
 			let total = CoinStack.Math.toBitcoin(balance);
-			$('#message').val(total);
+			//$('#message').val(total);
 			$('#message').text(" Total: " + total); 
 			console.log("address: ", addr);
 			console.log('total: ',total);
@@ -66,8 +94,9 @@ $(document).ready(function(){
   	<div id="tablePlace"></div>
 	<button id="newAccount">Click for New Account</button>
 	<button id="newBlance">잔액조회</button>
+	<button id="newSend">전송</button>
 	
-	<h5>송신처 <br> <input id="i_address" size="45" placeholder="송신처입력"></input> </h5>
+	<h5>송신처 <br> <input id="i_address" value=1M8ke3u58t2NmQ5StmJVNSusdbjWPXpZkh size="45" placeholder="송신처입력"></input> </h5>
 	<h5>수신처 <br> <input id="to_address" size="45" placeholder="수신처입력"></input> </h5>
 	<h5>코인 <br> <input id="coin" size="45" placeholder="코인금액입력"></input> </h5>
   </div>
