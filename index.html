@@ -21,6 +21,19 @@ $(document).ready(function(){
     console.log('starting...');
   }
 
+  $('#newBlance').on('click', function(){	
+	let addr = $('#i_address').val()
+	client.getBalance(addr, function (err, balance) {
+	    if (!err) {
+			let total = CoinStack.Math.toBitcoin(balance);
+			$('#message').val(total);
+			$('#message').text(" Total: " + total); 
+			console.log("address: ", addr);
+			console.log('total: ',total);
+		}
+     }); 
+	})  
+	
   $('#newAccount').on('click', function(){
     let privateKey = CoinStack.ECKey.createKey(); //개인비번코드 생성
     if (DEBUG) console.log("privateKey : ", privateKey);
@@ -52,14 +65,16 @@ $(document).ready(function(){
     <h2><strong> Welcome to Coinstack! </strong></h2>
   	<div id="tablePlace"></div>
 	<button id="newAccount">Click for New Account</button>
-	<button id="nullclick">Click for Nothing</button>
-	<button id="check">New</button>
-	<h5>송신처 <br> <input id="i_address" size="80" placeholder="송신처입력"></input> </h5>
+	<button id="newBlance">잔액조회</button>
+	
+	<h5>송신처 <br> <input id="i_address" size="45" placeholder="송신처입력"></input> </h5>
+	<h5>수신처 <br> <input id="to_address" size="45" placeholder="수신처입력"></input> </h5>
+	<h5>코인 <br> <input id="coin" size="45" placeholder="코인금액입력"></input> </h5>
   </div>
   <br>
   <br>
   <div class="container " role="main">
-	<h4><strong> Account Num </strong></h4>
+	<h4><strong> Message </strong></h4>
     <div id="message"></div>
   </div>
 <hr>
