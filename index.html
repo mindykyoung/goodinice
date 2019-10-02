@@ -21,9 +21,10 @@ $(document).ready(function(){
 	console.log("client: ", client);
     console.log('starting...');
   }
-  $('#newSend').on('click', function(){ //전송
-	let toaddressress = $('#to_address').val()
-	let fromaddress = $('#i_address').val()
+  
+  $('#newSend').on('click', function(){
+	let toaccount = $('#to_address').val()
+	let fromaccount = $('#i_address').val()
 	let coin = $('#coin').val()
 	
 	let txBuilder = client.createTransactionBuilder();
@@ -48,7 +49,8 @@ $(document).ready(function(){
       } //end of try
   
     }) // end of txbuilder
-  })
+  })//end of newSend
+  
   $('#newBlance').on('click', function(){	
 	let addr = $('#i_address').val()
 	client.getBalance(addr, function (err, balance) {
